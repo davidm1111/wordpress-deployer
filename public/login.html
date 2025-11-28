@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WordPress Deployer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                var(--color-bg-primary);
+        }
+
+        .auth-card {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--color-bg-tertiary);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .auth-tab.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card card card-glass animate-fade-in">
+            <div class="logo">
+                <div class="logo-text">⚡ WP Deployer</div>
+                <p class="text-muted">Gestiona tus servidores WordPress</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+                <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="tu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" style="cursor: pointer;">
+                        <span class="text-muted" style="font-size: 0.875rem;">Recordarme</span>
+                    </label>
+                    <a href="#" class="text-primary" style="font-size: 0.875rem;">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">
+                    Iniciar Sesión
+                </button>
+
+                <p class="text-center text-muted mt-lg" style="font-size: 0.875rem;">
+                    ¿No tienes cuenta? <a href="#" onclick="switchTab('register'); return false;"
+                        class="text-primary">Regístrate gratis</a>
+                </p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label" for="register-name">Nombre completo</label>
+                    <input type="text" id="register-name" class="form-input" placeholder="Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="register-email">Email</label>
+                    <input type="email" id="register-email" class="form-input" placeholder="tu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="register-password">Contraseña</label>
+                    <input type="password" id="register-password" class="form-input" placeholder="••••••••" required
+                        minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="register-password-confirm">Confirmar contraseña</label>
+                    <input type="password" id="register-password-confirm" class="form-input" placeholder="••••••••"
+                        required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: start; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" required style="margin-top: 0.25rem; cursor: pointer;">
+                        <span class="text-muted" style="font-size: 0.875rem;">
+                            Acepto los <a href="#" class="text-primary">términos y condiciones</a> y la <a href="#"
+                                class="text-primary">política de privacidad</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success w-full">
+                    Crear Cuenta
+                </button>
+
+                <p class="text-center text-muted mt-lg" style="font-size: 0.875rem;">
+                    ¿Ya tienes cuenta? <a href="#" onclick="switchTab('login'); return false;"
+                        class="text-primary">Inicia sesión</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + '-form').classList.add('active');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert(data.error || 'Error al iniciar sesión');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Error de conexión. Por favor, intenta de nuevo.');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert(data.error || 'Error al registrarse');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                alert('Error de conexión. Por favor, intenta de nuevo.');
+            }
+        }
+    </script>
+</body>
+
+</html>
