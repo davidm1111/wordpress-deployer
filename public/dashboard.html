@@ -264,180 +264,129 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        Desplegar WordPress
-                    </button>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Añadir Servidor</h2>
+                                <button class="modal-close" onclick="closeModal('add-server')">&times;</button>
+                            </div>
+                            <form onsubmit="handleAddServer(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre del Servidor</label>
+                                    <input type="text" class="form-input" id="server-name" placeholder="Mi Servidor VPS"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Dirección IP</label>
+                                    <input type="text" class="form-input" id="server-ip" placeholder="192.168.1.100"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Usuario SSH</label>
+                                    <input type="text" class="form-input" id="server-user" value="root" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Puerto SSH</label>
+                                    <input type="number" class="form-input" id="server-port" value="22" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Clave SSH (privada)</label>
+                                    <textarea class="form-textarea" id="server-key"
+                                        placeholder="-----BEGIN RSA PRIVATE KEY-----" required></textarea>
+                                </div>
+                                <div class="flex gap-md">
+                                    <button type="button" class="btn btn-secondary flex-1"
+                                        onclick="closeModal('add-server')">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary flex-1">Conectar Servidor</button>
+                                </div>
+                            </form>
+                        </div>
                 </div>
-            </div>
 
-            <!-- Overview Section -->
-            <div id="overview-section" class="dashboard-section">
-                <!-- Stats -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Servidores</div>
-                        <div class="stat-value" id="servers-count">0</div>
+                <!-- Deploy WordPress Modal -->
+                <div id="deploy-wordpress-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Desplegar WordPress</h2>
+                            <button class="modal-close" onclick="closeModal('deploy-wordpress')">&times;</button>
+                        </div>
+                        <form onsubmit="handleDeployWordPress(event)">
+                            <div class="form-group">
+                                <label class="form-label">Servidor</label>
+                                <select class="form-select" id="deploy-server" required>
+                                    <option value="">Selecciona un servidor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nombre del Sitio</label>
+                                <input type="text" class="form-input" id="site-name" placeholder="Mi Blog" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Dominio</label>
+                                <input type="text" class="form-input" id="site-domain" placeholder="miblog.com"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Versión de WordPress</label>
+                                <select class="form-select" id="wp-version">
+                                    <option value="latest">Última versión</option>
+                                    <option value="6.4">WordPress 6.4</option>
+                                    <option value="6.3">WordPress 6.3</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="install-ssl" checked style="cursor: pointer;">
+                                    <span>Instalar certificado SSL (Let's Encrypt)</span>
+                                </label>
+                            </div>
+                            <div class="flex gap-md">
+                                <button type="button" class="btn btn-secondary flex-1"
+                                    onclick="closeModal('deploy-wordpress')">Cancelar</button>
+                                <button type="submit" class="btn btn-success flex-1">Desplegar</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Sitios WordPress</div>
-                        <div class="stat-value" id="sites-count">0</div>
+                </div>
+
+                <!-- Clone Site Modal -->
+                <div id="clone-site-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Clonar Sitio</h2>
+                            <button class="modal-close" onclick="closeModal('clone-site')">&times;</button>
+                        </div>
+                        <form onsubmit="handleCloneSite(event)">
+                            <input type="hidden" id="clone-source-id">
+                            <div class="form-group">
+                                <label class="form-label">Sitio a Clonar</label>
+                                <input type="text" class="form-input" id="clone-source-name" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nuevo Nombre</label>
+                                <input type="text" class="form-input" id="clone-new-name" placeholder="Copia de Mi Blog"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nuevo Dominio</label>
+                                <input type="text" class="form-input" id="clone-new-domain"
+                                    placeholder="copia.miblog.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Servidor Destino</label>
+                                <select class="form-select" id="clone-server" required>
+                                    <option value="">Selecciona un servidor</option>
+                                </select>
+                            </div>
+                            <div class="flex gap-md">
+                                <button type="button" class="btn btn-secondary flex-1"
+                                    onclick="closeModal('clone-site')">Cancelar</button>
+                                <button type="submit" class="btn btn-success flex-1">Clonar Sitio</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Sitios Activos</div>
-                        <div class="stat-value text-success" id="active-sites-count">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Uso Total</div>
-                        <div class="stat-value" id="total-usage">0 GB</div>
-                    </div>
                 </div>
 
-                <!-- Recent Activity -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Actividad Reciente</h3>
-                    </div>
-                    <div id="recent-activity">
-                        <p class="text-muted">No hay actividad reciente</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Servers Section -->
-            <div id="servers-section" class="dashboard-section" style="display: none;">
-                <div class="grid grid-2" id="servers-list">
-                    <p class="text-muted">No hay servidores configurados</p>
-                </div>
-            </div>
-
-            <!-- Sites Section -->
-            <div id="sites-section" class="dashboard-section" style="display: none;">
-                <div class="grid grid-2" id="sites-list">
-                    <p class="text-muted">No hay sitios desplegados</p>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Add Server Modal -->
-    <div id="add-server-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Añadir Servidor</h2>
-                <button class="modal-close" onclick="closeModal('add-server')">&times;</button>
-            </div>
-            <form onsubmit="handleAddServer(event)">
-                <div class="form-group">
-                    <label class="form-label">Nombre del Servidor</label>
-                    <input type="text" class="form-input" id="server-name" placeholder="Mi Servidor VPS" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Dirección IP</label>
-                    <input type="text" class="form-input" id="server-ip" placeholder="192.168.1.100" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Usuario SSH</label>
-                    <input type="text" class="form-input" id="server-user" value="root" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Puerto SSH</label>
-                    <input type="number" class="form-input" id="server-port" value="22" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Clave SSH (privada)</label>
-                    <textarea class="form-textarea" id="server-key" placeholder="-----BEGIN RSA PRIVATE KEY-----"
-                        required></textarea>
-                </div>
-                <div class="flex gap-md">
-                    <button type="button" class="btn btn-secondary flex-1"
-                        onclick="closeModal('add-server')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary flex-1">Conectar Servidor</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Deploy WordPress Modal -->
-    <div id="deploy-wordpress-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Desplegar WordPress</h2>
-                <button class="modal-close" onclick="closeModal('deploy-wordpress')">&times;</button>
-            </div>
-            <form onsubmit="handleDeployWordPress(event)">
-                <div class="form-group">
-                    <label class="form-label">Servidor</label>
-                    <select class="form-select" id="deploy-server" required>
-                        <option value="">Selecciona un servidor</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nombre del Sitio</label>
-                    <input type="text" class="form-input" id="site-name" placeholder="Mi Blog" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Dominio</label>
-                    <input type="text" class="form-input" id="site-domain" placeholder="miblog.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Versión de WordPress</label>
-                    <select class="form-select" id="wp-version">
-                        <option value="latest">Última versión</option>
-                        <option value="6.4">WordPress 6.4</option>
-                        <option value="6.3">WordPress 6.3</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" id="install-ssl" checked style="cursor: pointer;">
-                        <span>Instalar certificado SSL (Let's Encrypt)</span>
-                    </label>
-                </div>
-                <div class="flex gap-md">
-                    <button type="button" class="btn btn-secondary flex-1"
-                        onclick="closeModal('deploy-wordpress')">Cancelar</button>
-                    <button type="submit" class="btn btn-success flex-1">Desplegar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Clone Site Modal -->
-    <div id="clone-site-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Clonar Sitio</h2>
-                <button class="modal-close" onclick="closeModal('clone-site')">&times;</button>
-            </div>
-            <form onsubmit="handleCloneSite(event)">
-                <input type="hidden" id="clone-source-id">
-                <div class="form-group">
-                    <label class="form-label">Sitio a Clonar</label>
-                    <input type="text" class="form-input" id="clone-source-name" readonly>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nuevo Nombre</label>
-                    <input type="text" class="form-input" id="clone-new-name" placeholder="Copia de Mi Blog" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nuevo Dominio</label>
-                    <input type="text" class="form-input" id="clone-new-domain" placeholder="copia.miblog.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Servidor Destino</label>
-                    <select class="form-select" id="clone-server" required>
-                        <option value="">Selecciona un servidor</option>
-                    </select>
-                </div>
-                <div class="flex gap-md">
-                    <button type="button" class="btn btn-secondary flex-1"
-                        onclick="closeModal('clone-site')">Cancelar</button>
-                    <button type="submit" class="btn btn-success flex-1">Clonar Sitio</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="/js/app.js"></script>
+                <script src="/js/app.js"></script>
 </body>
 
 </html>
